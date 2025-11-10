@@ -8,6 +8,8 @@ import 'primeflex/primeflex.css';
 
 const SplashPageLazy = React.lazy(() => import("./components/SplashPage"));
 const HomePageLazy = React.lazy(() => import("./components/HomePage"));
+const OnboardingLazy = React.lazy(() => import("./components/Onboarding"));
+
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
       <Routes>
          <Route path='/' element={<SplashPageLazy />} />
          <Route path='/HomePage' element={<HomePageLazy />} />
+         <Route path='/Onboarding' element={<OnboardingLazy />} />
       </Routes>
     </Suspense>
   );

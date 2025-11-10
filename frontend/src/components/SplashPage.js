@@ -7,7 +7,7 @@ function SplashPage() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/HomePage'); 
+    navigate('/Onboarding'); 
   };
 
 
