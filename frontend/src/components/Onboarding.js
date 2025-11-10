@@ -10,7 +10,7 @@ const slides = [
   { img: "/images/1.jpg", text: "Ghar Ka Swad, Office Tak Pure Veg Tiffins!" },
   { img: "/images/2.jpg", text: "Skip the drive we deliver for a buck!" },
   { img: "/images/3.jpg", text: "Your event’s MVP our catering!" },
-  { img: "/images/4.jpg", text: "Sweet endings for your events!" }
+  { img: "/images/4.jpg", text: "Click. Calendar. Done! Schedule 30 days of deliveries in seconds!" }
 ];
 
 export default function Onboarding() {
@@ -60,7 +60,7 @@ export default function Onboarding() {
               {/* טקסט */}
               <Box
                 sx={{
-                  width: 296,
+                  width: 246,
                   height: 81,
                   mt: "73px",
                   mx: "auto",
