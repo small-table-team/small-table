@@ -4,25 +4,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import { useNavigate } from "react-router-dom"; // אם אתם משתמשים ב-react-router
+import { useNavigate } from "react-router-dom";
 
 const slides = [
-  {
-    img: "https://source.unsplash.com/600x400/?food",
-    text: "Ghar Ka Swad, Office Tak Pure Veg Tiffins!"
-  },
-  {
-    img: "https://source.unsplash.com/600x400/?lunch",
-    text: "Skip the drive we deliver for a buck!"
-  },
-  {
-    img: "https://source.unsplash.com/600x400/?healthy",
-    text: "Your event’s MVP our catering!"
-  },
-  {
-    img: "https://source.unsplash.com/600x400/?dessert",
-    text: "Sweet endings for your events!"
-  }
+  { img: "/images/1.jpg", text: "Ghar Ka Swad, Office Tak Pure Veg Tiffins!" },
+  { img: "/images/2.jpg", text: "Skip the drive we deliver for a buck!" },
+  { img: "/images/3.jpg", text: "Your event’s MVP our catering!" },
+  { img: "/images/4.jpg", text: "Sweet endings for your events!" }
 ];
 
 export default function Onboarding() {
@@ -31,43 +19,28 @@ export default function Onboarding() {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    if (index < slides.length - 1) {
-      swiperRef.current.swiper.slideNext();
-    } else {
-      navigate("/HomePage"); // דף הבית
-    }
+    if (index < slides.length - 1) swiperRef.current.swiper.slideNext();
+    else navigate("/HomePage");
   };
 
-  const handleSkip = () => {
-    navigate("/HomePage"); // דילוג ישיר לדף הבית
-  };
+  const handleSkip = () => navigate("/HomePage");
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="space-between"
-      height="100vh"
-      p={3}
-      sx={{ backgroundColor: "white" }}
-    >
+    <Box display="flex" flexDirection="column" height="100vh" sx={{ backgroundColor: "white", position: "relative" }}>
       <Swiper
         ref={swiperRef}
         onSlideChange={(swiper) => setIndex(swiper.activeIndex)}
-        pagination={{ clickable: true }}
+        pagination={{
+          clickable: true,
+        }}
         modules={[Pagination]}
         style={{ width: "100%", flex: 1 }}
+        speed={500}
       >
         {slides.map((slide, i) => (
           <SwiperSlide key={i}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              height="100%"
-            >
+            <Box display="flex" flexDirection="column" height="100%">
+              {/* תמונה */}
               <Box
                 component="img"
                 src={slide.img}
@@ -75,57 +48,87 @@ export default function Onboarding() {
                 sx={{
                   width: 240,
                   height: 292,
-                  borderRadius: 2,
+                  borderRadius: "12px",
                   objectFit: "cover",
                   boxShadow: 3,
-                  mt: 6,
-                  mb: 3
+                  mt: "114px",
+                  mx: "auto",
+                  opacity: 1
                 }}
               />
-              <Typography
+
+              {/* טקסט */}
+              <Box
                 sx={{
-                  fontFamily: "Poppins",
-                  fontWeight: 700,
-                  fontSize: 18,
+                  width: 296,
+                  height: 81,
+                  mt: "73px",
+                  mx: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   textAlign: "center",
-                  color: "#32343E",
-                  mb: 2
                 }}
               >
-                {slide.text}
-              </Typography>
+                <Typography
+                  sx={{
+                    fontFamily: "Poppins",
+                    fontWeight: 700,
+                    fontSize: 18,
+                    lineHeight: "100%",
+                    letterSpacing: 0,
+                    textAlign: "center",
+                    color: "#32343E",
+                    style: "bold",
+                    
+                  }}
+                >
+                  {slide.text}
+                </Typography>
+              </Box>
             </Box>
           </SwiperSlide>
         ))}
       </Swiper>
 
-      <Box width="100%" textAlign="center" mb={3}>
+      {/* כפתור Next / Finish */}
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: "27px", mb: "20px" }}>
         <Button
           variant="contained"
-          fullWidth
           sx={{
+            width: 327,
+            height: 62,
+            borderRadius: "12px",
             backgroundColor: "#651C1C",
-            borderRadius: 2,
-            py: 1.5,
             fontWeight: "bold",
-            textTransform: "none"
+            textTransform: "none",
+            fontFamily: "Sen",
           }}
           onClick={handleNext}
         >
           {index === slides.length - 1 ? "Finish" : "Next"}
         </Button>
-
-        <Button
-          onClick={handleSkip}
-          sx={{
-            mt: 1,
-            color: "gray",
-            textTransform: "none"
-          }}
-        >
+        <Button onClick={handleSkip} sx={{ mt: 1, color: "gray", textTransform: "none" }}>
           Skip
         </Button>
       </Box>
+
+      {/* מיקום Pagination לפי הפיגמה */}
+      <Box
+        sx={{
+          fontFamily: "Sen",
+          position: "absolute",
+          top: "675px",
+          left: "24px",
+          width: "327px",
+          height: "62px",
+          borderRadius: "12px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          pointerEvents: "none" // כדי שה-Swiper יטפל בלחיצה על הנקודות
+        }}
+      />
     </Box>
   );
 }
