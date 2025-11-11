@@ -11,7 +11,7 @@ import {
   Paper,
   CircularProgress,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import AppleIcon from "@mui/icons-material/Apple";
@@ -25,15 +25,29 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
+    // בדיקה אם השדות ריקים
+    if (!email || !password) {
+      setStatus({ type: "error", message: "Please fill in all fields" });
+      return;
+    }
+
+    setLoading(true);
+    setStatus(null);
+
+    // סימולציה של קריאה לשרת
     const fakeResponse = await new Promise((res) =>
       setTimeout(() => res({ status: "ok" }), 1000)
     );
 
     setLoading(false);
-    setStatus(fakeResponse.status);
-    if (fakeResponse.status === "ok") navigate("/HomePage");
+
+    if (fakeResponse.status === "ok") {
+      setStatus({ type: "success", message: "Login Successful ✅" });
+      navigate("/HomePage");
+    } else {
+      setStatus({ type: "error", message: "Login failed ❌" });
+    }
   };
 
   return (
@@ -138,21 +152,24 @@ export default function Login() {
             {loading ? <CircularProgress size={24} color="inherit" /> : "LOG IN"}
           </Button>
 
-          {status === "ok" && (
-            <Typography color="success.main" mt={2}>
-              Login Successful ✅
+          {/* הודעות שגיאה/הצלחה */}
+          {status && (
+            <Typography
+              color={status.type === "success" ? "success.main" : "error"}
+              mt={2}
+            >
+              {status.message}
             </Typography>
           )}
         </Box>
 
         {/* לינק להרשמה */}
         <Typography mt={4} variant="body2" color="text.secondary">
-  Don’t have an account?{" "}
-  <Link href="/signup" color="primary" fontWeight="600">
-    SIGN UP
-  </Link>
-</Typography>
-
+          Don’t have an account?{" "}
+          <Link component={RouterLink} to="/signup" color="primary" fontWeight="600">
+            SIGN UP
+          </Link>
+        </Typography>
 
         {/* רשתות חברתיות */}
         <Stack direction="row" justifyContent="center" spacing={2} mt={3}>
