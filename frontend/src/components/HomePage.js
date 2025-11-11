@@ -1,74 +1,136 @@
-import React from 'react';
-import { Card } from 'primereact/card';
-import { Button } from 'primereact/button';
+import React from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+  Stack,
+} from "@mui/material";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { useNavigate } from "react-router-dom";
 
-function HomePage() {
+export default function HomePage() {
+  const navigate = useNavigate();
+
   const roles = [
-    { name: 'משתמש ', icon: 'pi pi-users', description: 'חיפוש ובניית אירועים טעימים', color: 'yellow-400' },
-    { name: 'בעל קייטרינג', icon: 'pi pi-briefcase', description: 'ניהול תפריטים והזמנות בקלות', color: 'green-400' },
-    { name: 'מנהל', icon: 'pi pi-cog', description: 'ניהול משתמשים והמערכת', color: 'purple-400' },
+    {
+      name: "משתמש",
+      icon: <PeopleAltIcon sx={{ fontSize: 40, color: "#651C1C" }} />,
+      description: "חיפוש ובניית אירועים טעימים",
+      color: "primary",
+      route: "/login",
+    },
+    {
+      name: "בעל קייטרינג",
+      icon: <BusinessCenterIcon sx={{ fontSize: 40, color: "#2e7d32" }} />,
+      description: "ניהול תפריטים והזמנות בקלות",
+      color: "success",
+      route: "/catering-home", // נתיב לדף הבית של בעל הקייטרינג
+    },
+    {
+      name: "מנהל",
+      icon: <SettingsIcon sx={{ fontSize: 40, color: "#6a1b9a" }} />,
+      description: "ניהול משתמשים והמערכת",
+      color: "secondary",
+    },
   ];
 
   const handleClick = (role) => {
-    alert(`בחרת ב-${role}! בהמשך זה יוביל למסך המתאים.`);
+    if (role.route) navigate(role.route);
+    else alert(`בחרת ב-${role.name}! בהמשך זה יוביל למסך המתאים.`);
   };
 
   return (
-   
+    <Box
+      sx={{
+        backgroundColor: "#f5f5f5",
+        minHeight: "100vh",
+        py: 8,
+        px: 2,
+        textAlign: "center",
+      }}
+    >
+      {/* כותרת עליונה */}
+      <Typography variant="h4" fontWeight="bold" mb={1}>
+        ברוכים הבאים!
+      </Typography>
+      <Typography variant="h6" color="text.secondary" mb={6}>
+        בחרי את סוג המשתמש שלך כדי להתחיל
+      </Typography>
 
-    <div style={{ background: '#f0f4f8', padding: '50px 20px' }}>
-      
-      <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <h1>ברוכים הבאים!</h1>
-        <h2>בחרי את סוג המשתמש שלך כדי להתחיל</h2>
-      </div>
-
-     
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          gap: '20px',
-          alignItems: 'flex-start',
-        }}
+      {/* רשימת הכרטיסים */}
+      <Stack
+        direction="row"
+        flexWrap="wrap"
+        justifyContent="center"
+        gap={4}
+        sx={{ px: 2 }}
       >
         {roles.map((role) => (
-          <div
+          <Card
             key={role.name}
-            style={{
-              flex: '1 1 300px',
-              maxWidth: '300px',
-              display: 'flex',
-              justifyContent: 'center',
+            sx={{
+              width: 300,
+              borderRadius: 3,
+              boxShadow: 4,
+              textAlign: "center",
+              transition: "0.3s",
+              "&:hover": { transform: "scale(1.03)", boxShadow: 6 },
             }}
           >
-            <Card
-              title={role.name}
-              subTitle={<i className={`pi ${role.icon}`} style={{ fontSize: '2rem', marginRight: '10px' }}></i>}
-              className="p-shadow-6 p-p-4"
-              style={{
-                width: '100%',
-                minHeight: '220px',
-                borderRadius: '15px',
-                textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
-              <p>{role.description}</p>
+            <CardContent>
+              <Box display="flex" justifyContent="center" mb={2}>
+                {role.icon}
+              </Box>
+              <Typography
+                variant="h6"
+                fontWeight="600"
+                gutterBottom
+                color="text.primary"
+              >
+                {role.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {role.description}
+              </Typography>
+            </CardContent>
+
+            <CardActions sx={{ justifyContent: "center", pb: 2 }}>
               <Button
-                label="בחר"
-                className={`p-button p-button-${role.color}`}
-                onClick={() => handleClick(role.name)}
-              />
-            </Card>
-          </div>
+                variant="contained"
+                color={role.color}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: "none",
+                  px: 4,
+                  fontWeight: "bold",
+                  bgcolor:
+                    role.color === "primary"
+                      ? "#651C1C"
+                      : role.color === "success"
+                      ? "#2e7d32"
+                      : "#6a1b9a",
+                  "&:hover": {
+                    bgcolor:
+                      role.color === "primary"
+                        ? "#7e2323"
+                        : role.color === "success"
+                        ? "#388e3c"
+                        : "#8e24aa",
+                  },
+                }}
+                onClick={() => handleClick(role)}
+              >
+                בחר
+              </Button>
+            </CardActions>
+          </Card>
         ))}
-      </div>
-    </div>
+      </Stack>
+    </Box>
   );
 }
-
-export default HomePage;
