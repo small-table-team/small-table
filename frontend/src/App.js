@@ -7,7 +7,7 @@ const CateringHomePageLazy = React.lazy(() => import("./components/CateringHomeP
 const LoginLazy = React.lazy(() => import("./components/LoginPage"));
 const OnboardingLazy = React.lazy(() => import("./components/Onboarding"));
 const SignUpLazy = React.lazy(() => import("./components/SignUpPage"));
-
+const AllDishesPageLazy = React.lazy(() => import("./components/AllDishesPage"));
 
 function App() {
   return (
@@ -17,8 +17,9 @@ function App() {
         <Route path="/HomePage" element={<HomePageLazy />} />
         <Route path="/catering-home" element={<CateringHomePageLazy />} /> {/* דף הבית של בעל הקייטרינג */}
         <Route path="/login" element={<LoginLazy />} />
-<Route path="/Onboarding" element={<OnboardingLazy />} />
-<Route path="/signup" element={<SignUpLazy  />} /> 
+        <Route path="/Onboarding" element={<OnboardingLazy />} />
+        <Route path="/signup" element={<SignUpLazy  />} /> 
+        <Route path="/dishes" element={<AllDishesPageLazy />} />
       </Routes>
     </Suspense>
   );

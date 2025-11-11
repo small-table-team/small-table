@@ -16,6 +16,9 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import AppleIcon from "@mui/icons-material/Apple";
 
+// ייבוא השירות שלך
+import { usersService } from "../services/usersService"; // או authService אם את משתמשת בו
+
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -35,18 +38,23 @@ export default function Login() {
     setLoading(true);
     setStatus(null);
 
-    // סימולציה של קריאה לשרת
-    const fakeResponse = await new Promise((res) =>
-      setTimeout(() => res({ status: "ok" }), 1000)
-    );
+    try {
+      // שימוש בשירות כדי לבדוק את המשתמש
+      const user = usersService.login(email, password); // אם משתמשים ב-usersService
+      // const { status: resStatus, user } = await loginUser(email, password); // אם משתמשים ב-authService
 
-    setLoading(false);
+      setLoading(false);
 
-    if (fakeResponse.status === "ok") {
-      setStatus({ type: "success", message: "Login Successful ✅" });
-      navigate("/HomePage");
-    } else {
-      setStatus({ type: "error", message: "Login failed ❌" });
+      if (user) {
+        setStatus({ type: "success", message: "Login Successful ✅" });
+        navigate("/HomePage");
+      } else {
+        setStatus({ type: "error", message: "Invalid email or password ❌" });
+      }
+    } catch (err) {
+      setLoading(false);
+      setStatus({ type: "error", message: "Server error ❌" });
+      console.error(err);
     }
   };
 
