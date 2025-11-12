@@ -20,10 +20,10 @@ export default function Onboarding() {
 
   const handleNext = () => {
     if (index < slides.length - 1) swiperRef.current.swiper.slideNext();
-    else navigate("/HomePage");
+    else navigate("/login");
   };
 
-  const handleSkip = () => navigate("/HomePage");
+  const handleSkip = () => navigate("/login");
 
   return (
     <Box
