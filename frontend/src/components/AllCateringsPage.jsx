@@ -1,4 +1,4 @@
-// src/components/AllDishesPage.jsx
+// src/components/AllCateringsPage.jsx
 import React, { useMemo, useState } from "react";
 import {
   Box,
@@ -29,12 +29,13 @@ import {
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ClearIcon from "@mui/icons-material/Clear";
+import { useNavigate } from "react-router-dom";
 
 // דוגמת נתונים (מוחלפים בעתיד בנתונים מהשרת)
 const MOCK_DISHES = [
   {
     id: "d1",
-    name: "שניצל פריך",
+    name: " פריך",
     image:
       "https://images.unsplash.com/photo-1604908177522-4b2f9d1c3f7b?w=800&q=60",
     price: 45,
@@ -50,7 +51,7 @@ const MOCK_DISHES = [
   },
   {
     id: "d2",
-    name: "סלט קיסר",
+    name: "הקיטרינג הביתי",
     image:
       "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&q=60",
     price: 30,
@@ -66,7 +67,7 @@ const MOCK_DISHES = [
   },
   {
     id: "d3",
-    name: "קערת בודאלתוס (צמחוני)",
+    name: "קיטרינג עולמי",
     image:
       "https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?w=800&q=60",
     price: 38,
@@ -93,7 +94,10 @@ function uniqueValues(items = [], key) {
   return Array.from(set);
 }
 
-export default function AllDishesPage({ dishes = MOCK_DISHES }) {
+export default function AllCateringsPage({ dishes = MOCK_DISHES }) {
+  const navigate = useNavigate();
+
+  // cleaned up: converted from dishes dashboard to caterings dashboard
   // מצב סינונים
   const [filterCategory, setFilterCategory] = useState("");
   const [filterCuisine, setFilterCuisine] = useState("");
@@ -197,7 +201,7 @@ export default function AllDishesPage({ dishes = MOCK_DISHES }) {
     <Box sx={{ p: { xs: 2, sm: 4 }, dir: "rtl" }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6" fontWeight={700}>
-          כל המנות
+          כל הקייטרינגים
         </Typography>
 
         <Stack direction="row" spacing={1} alignItems="center">
@@ -216,67 +220,15 @@ export default function AllDishesPage({ dishes = MOCK_DISHES }) {
         </Stack>
       </Stack>
 
-      {/* אזור סינון */}
+      {/* אזור סינון פשוט — חיפוש ושיוך תגיות */}
       {showFilters && (
-        <Box
-          sx={{
-            mb: 2,
-            p: 2,
-            borderRadius: 2,
-            backgroundColor: "background.paper",
-            boxShadow: 1,
-          }}
-        >
-          <Grid container spacing={2}>
+        <Box sx={{ mb: 2, p: 2, borderRadius: 2, backgroundColor: "background.paper", boxShadow: 1 }}>
+          <Grid container spacing={2} alignItems="center">
             <Grid item xs={12} sm={6}>
               <TextField
-                label="חיפוש בשם"
+                label="חיפוש בקייטרינג"
                 value={searchName}
                 onChange={(e) => setSearchName(e.target.value)}
-                fullWidth
-                size="small"
-              />
-            </Grid>
-
-            <Grid item xs={6} sm={3}>
-              <FormControl fullWidth size="small">
-                <InputLabel>קטגוריה</InputLabel>
-                <Select
-                  value={filterCategory}
-                  label="קטגוריה"
-                  onChange={(e) => setFilterCategory(e.target.value)}
-                >
-                  {categories.map((c) => (
-                    <MenuItem key={c || "all"} value={c}>
-                      {c || "הכל"}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={6} sm={3}>
-              <FormControl fullWidth size="small">
-                <InputLabel>מטבח</InputLabel>
-                <Select
-                  value={filterCuisine}
-                  label="מטבח"
-                  onChange={(e) => setFilterCuisine(e.target.value)}
-                >
-                  {cuisines.map((c) => (
-                    <MenuItem key={c || "allc"} value={c}>
-                      {c || "הכל"}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="חיפוש בתיאור (חופשי)"
-                value={searchDescription}
-                onChange={(e) => setSearchDescription(e.target.value)}
                 fullWidth
                 size="small"
               />
@@ -301,45 +253,19 @@ export default function AllDishesPage({ dishes = MOCK_DISHES }) {
                 </Select>
               </FormControl>
             </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Typography variant="caption" display="block" mb={1}>
-                טווח מחיר: {priceRange[0]} - {priceRange[1]}
-              </Typography>
-              <Slider
-                value={priceRange}
-                onChange={(_, newValue) => setPriceRange(newValue)}
-                valueLabelDisplay="auto"
-                min={prices[0]}
-                max={prices[1]}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <FormControlLabel
-                control={<Checkbox checked={filterVegan} onChange={(e) => setFilterVegan(e.target.checked)} />}
-                label="טבעוני"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox checked={filterGlutenFree} onChange={(e) => setFilterGlutenFree(e.target.checked)} />
-                }
-                label="ללא גלוטן"
-              />
-            </Grid>
           </Grid>
         </Box>
       )}
 
       <Divider sx={{ mb: 2 }} />
 
-      {/* רשת תצוגה של מנות */}
+      {/* רשת תצוגה של קייטרינגים */}
       <Grid container spacing={2}>
         {filtered.length === 0 ? (
           <Grid item xs={12}>
             <Box sx={{ textAlign: "center", py: 6 }}>
               <Typography variant="h6" color="text.secondary">
-                לא נמצאו מנות לפי הקריטריונים
+                לא נמצאו קייטרינגים לפי הקריטריונים
               </Typography>
               <Button sx={{ mt: 2 }} onClick={clearFilters} variant="outlined">
                 הצג הכל
@@ -347,25 +273,25 @@ export default function AllDishesPage({ dishes = MOCK_DISHES }) {
             </Box>
           </Grid>
         ) : (
-          filtered.map((dish) => (
-            <Grid item key={dish.id} xs={12} sm={6} md={4}>
+          filtered.map((catering) => (
+            <Grid item key={catering.id} xs={12} sm={6} md={4}>
               <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
                 <Box sx={{ position: "relative" }}>
                   <CardMedia
                     component="img"
-                    image={dish.image}
-                    alt={dish.name}
+                    image={catering.image}
+                    alt={catering.name}
                     sx={{ height: { xs: 160, sm: 180 }, objectFit: "cover" }}
                   />
                   <IconButton
                     aria-label="zoom"
-                    onClick={() => setOpenImage(dish)}
+                    onClick={() => setOpenImage(catering)}
                     sx={{ position: "absolute", top: 8, left: 8, bgcolor: "rgba(255,255,255,0.8)" }}
                   >
                     <ZoomInIcon />
                   </IconButton>
                   <Badge
-                    badgeContent={`${dish.price}₪`}
+                    badgeContent={catering.priceRange}
                     color="primary"
                     sx={{ position: "absolute", top: 8, right: 8 }}
                   />
@@ -373,28 +299,27 @@ export default function AllDishesPage({ dishes = MOCK_DISHES }) {
 
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography variant="subtitle1" fontWeight={700}>
-                    {dish.name}
+                    {catering.name}
                   </Typography>
 
                   <Stack direction="row" spacing={1} flexWrap="wrap" mt={1}>
-                    <Chip label={dish.category} size="small" />
-                    <Chip label={dish.cuisine} size="small" />
-                    {dish.tags?.slice(0, 3).map((t) => (
+                    <Chip label={catering.location} size="small" />
+                    {catering.tags?.slice(0, 3).map((t) => (
                       <Chip key={t} label={t} size="small" variant="outlined" />
                     ))}
                   </Stack>
 
                   <Typography variant="body2" color="text.secondary" mt={1} noWrap>
-                    {dish.description}
+                    {catering.description}
                   </Typography>
                 </CardContent>
 
                 <CardActions>
-                  <Button size="small" onClick={() => alert(`בחרת את ${dish.name}`)}>
-                    בחר
+                  <Button size="small" onClick={() => navigate(`/catering/${catering.id}`)}>
+                    פתח
                   </Button>
                   <Typography variant="caption" color="text.secondary" ml="auto" sx={{ mr: 1 }}>
-                    {dish.rating ? `⭐ ${dish.rating}` : ""}
+                    {catering.rating ? `⭐ ${catering.rating}` : ""}
                   </Typography>
                 </CardActions>
               </Card>

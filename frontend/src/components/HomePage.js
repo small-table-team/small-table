@@ -22,7 +22,7 @@ export default function HomePage() {
       icon: <PeopleAltIcon sx={{ fontSize: 40, color: "#651C1C" }} />,
       description: "חיפוש ובניית אירועים טעימים",
       color: "primary",
-      route: "/login",
+      route: "/AllCaterings",
     },
     {
       name: "בעל קייטרינג",
