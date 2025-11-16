@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'businesses',
+    'events',
+    'carts',
+    'reviews',
+    'faq',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -74,11 +80,17 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'smallTableDB',          # שם מסד הנתונים מתוך ה־connection string
+        # 'USER': 'small-table',          # שם המשתמש
+        # 'PASSWORD': 'smallTable1234',   # הסיסמה שלך
+        # 'HOST': 'db.kirmixtutcgfwuvpppaf.supabase.co',  # ה‑host
+        # 'PORT': '5432',       
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'smallTableDB',  # שם מסד הנתונים שלך
         'USER': 'small-table',  # שם המשתמש
         'PASSWORD': 'smallTable1234',  # הסיסמה שלך
-        'HOST': 'db.kirmixtutcgfwuvpppaf.supabase.co',  # כתובת השרת
+        'HOST': 'db.abcdefghijklmnopqrst.supabase.co',  # כתובת השרת
         'PORT': '5432',  # הפורט
     }
 }
