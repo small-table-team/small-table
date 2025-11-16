@@ -9,6 +9,8 @@ const OnboardingLazy = React.lazy(() => import("./components/Onboarding"));
 const SignUpLazy = React.lazy(() => import("./components/SignUpPage"));
 const AllCateringsPageLazy = React.lazy(() => import("./components/AllCateringsPage"));
 const CateringDishesPage = React.lazy(() => import("./components/CateringDishesPage"));
+const FirstFilterPage = React.lazy(() => import("./components/FirstFilterPage"));
+const DishChecklistPage = React.lazy(() => import("./components/DishChecklistPage"));
 function App() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -20,7 +22,9 @@ function App() {
         <Route path="/Onboarding" element={<OnboardingLazy />} />
         <Route path="/signup" element={<SignUpLazy  />} /> 
   <Route path="/AllCaterings" element={<AllCateringsPageLazy />} />
-        <Route path="/catering/:cateringId" element={<CateringDishesPage />} />
+  <Route path="/catering/:cateringId" element={<CateringDishesPage />} />
+  <Route path="/dish-checklist/:dishId" element={<DishChecklistPage />} />
+  <Route path="/FirstFilterPage" element={<FirstFilterPage />} />
        
 
       

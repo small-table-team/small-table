@@ -191,7 +191,7 @@ export default function CateringDishesPage() {
               overflow: 'hidden',
               cursor: 'pointer',
             }}
-            onClick={() => navigate(`/dish/${dish.id}`)}
+            onClick={() => navigate(`/dish-checklist/${dish.id}`)}
           >
             <CardMedia
               component="img"
