@@ -26,7 +26,7 @@ export default function FirstFilterPage() {
 
     const filterData = { eventSize, menuType, timestamp: new Date().toISOString() };
     localStorage.setItem('cateringFilters', JSON.stringify(filterData));
-    navigate('/caterings');
+    navigate('/AllCaterings');
   };
 
   const eventSizes = [
