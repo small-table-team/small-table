@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Typography, Card, CardContent, Checkbox, FormControlLabel, Button } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 // Mock data for checklist (replace with real data as needed)
 const mockDishesByCategory = {
@@ -28,18 +29,39 @@ const mockDishesByCategory = {
 };
 
 export default function DishChecklistPage() {
-  const { dishId } = useParams();
+  const { cateringId, dishId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { items: cartItems, addItem, removeItem } = useCart();
   const dishes = mockDishesByCategory[dishId] || [];
-  const [checked, setChecked] = useState([]);
+  const cateringName = location.state?.cateringName || `Catering ${cateringId}`;
+  const categoryNameFromState = location.state?.categoryName || `Category ${dishId}`;
 
   const MAX_SELECTION = 2; // Change this value to set the max allowed selections
+
+  // initialize checked from cart items that belong to this category and catering
+  const initialChecked = cartItems
+    .filter((it) => String(it.categoryId) === String(dishId) && String(it.cateringId) === String(cateringId))
+    .map((it) => it.id);
+
+  const [checked, setChecked] = useState(initialChecked);
 
   const handleToggle = (id) => {
     if (checked.includes(id)) {
       setChecked((prev) => prev.filter((item) => item !== id));
+      removeItem(id, cateringId);
     } else if (checked.length < MAX_SELECTION) {
       setChecked((prev) => [...prev, id]);
+      const dishObj = dishes.find((d) => d.id === id) || { id, name: 'Item' };
+      // add more metadata: categoryName and catering info
+      addItem({
+        id: dishObj.id,
+        name: dishObj.name,
+        categoryId: dishId,
+        categoryName: categoryNameFromState,
+        cateringId: cateringId,
+        cateringName,
+      });
     }
     // If max reached, do nothing
   };
