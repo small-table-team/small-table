@@ -17,13 +17,14 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+  const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !password || !rePassword) {
+    if (!name || !email || !password || !rePassword || !role) {
       setStatus({ type: "error", message: "Please fill in all fields" });
       return;
     }
@@ -34,14 +35,21 @@ export default function SignUp() {
     }
 
     setLoading(true);
-    const result = usersService.register(name, email, password);
+    const result = usersService.register(name, email, password, role);
     setLoading(false);
 
     if (result.error) {
       setStatus({ type: "error", message: result.error });
     } else {
       setStatus({ type: "success", message: "Sign Up Successful ✅" });
-      navigate("/login");
+      if (result.role === "user") {
+        navigate("/AllCaterings");
+      } else if (result.role === "catering") {
+        navigate("/catering-home");
+      } else if (result.role === "admin") {
+        navigate("/admin-home"); // או מסלול מתאים
+      }
+      
     }
   };
 
@@ -63,6 +71,19 @@ export default function SignUp() {
 
           <Typography variant="caption" color="text.secondary" fontWeight={600} align="left" display="block" mt={2}>RE-TYPE PASSWORD</Typography>
           <TextField variant="outlined" fullWidth type="password" value={rePassword} onChange={(e) => setRePassword(e.target.value)} placeholder="••••••••" size="small" margin="dense" />
+
+          {/* ✔ הוספת בחירת סטטוס */}
+          <Typography variant="caption" color="text.secondary" fontWeight={600} align="left" display="block" mt={2}>ROLE</Typography>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            style={{ width: "100%", padding: "10px", marginTop: "5px", borderRadius: "4px" }}
+          >
+            <option value="">Choose role</option>
+            <option value="user">משתמש</option>
+            <option value="catering">בעל קייטרינג</option>
+            <option value="admin">מנהל</option>
+          </select>
 
           <Button type="submit" fullWidth variant="contained" sx={{ bgcolor: "#651C1C", py: 1.5, borderRadius: 2, fontWeight: "bold", textTransform: "none", ":hover": { bgcolor: "#7e2323" } }} disabled={loading}>
             {loading ? <CircularProgress size={24} color="inherit" /> : "SIGN UP"}

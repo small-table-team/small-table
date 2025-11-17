@@ -1,0 +1,28 @@
+
+[
+    {
+      "id": 1,
+      "catering_id": 1,
+      "title": "Starters",
+      "max_selection": 3
+    },
+    {
+      "id": 2,
+      "catering_id": 1,
+      "title": "Main Dishes",
+      "max_selection": 5
+    },
+    {
+      "id": 3,
+      "catering_id": 2,
+      "title": "Salads",
+      "max_selection": 4
+    },
+    {
+      "id": 4,
+      "catering_id": 2,
+      "title": "Desserts",
+      "max_selection": 2
+    }
+  ]
+  

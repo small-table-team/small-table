@@ -1,0 +1,75 @@
+[
+    {
+      "id": 1,
+      "category_id": 1,
+      "name": "Bruschetta",
+      "description": "טוסטים עם עגבניות ובזיליקום",
+      "price": 25,
+      "image_url": "https://via.placeholder.com/150?text=Bruschetta"
+    },
+    {
+      "id": 2,
+      "category_id": 1,
+      "name": "Garlic Bread",
+      "description": "לחם שום עם שמן זית",
+      "price": 20,
+      "image_url": "https://via.placeholder.com/150?text=Garlic+Bread"
+    },
+    {
+      "id": 3,
+      "category_id": 2,
+      "name": "Grilled Chicken",
+      "description": "עוף בגריל עם תבלינים",
+      "price": 60,
+      "image_url": "https://via.placeholder.com/150?text=Grilled+Chicken"
+    },
+    {
+      "id": 4,
+      "category_id": 2,
+      "name": "Beef Steak",
+      "description": "סטייק בקר עסיסי",
+      "price": 85,
+      "image_url": "https://via.placeholder.com/150?text=Beef+Steak"
+    },
+    {
+      "id": 5,
+      "category_id": 3,
+      "name": "Greek Salad",
+      "description": "סלט יווני קלאסי",
+      "price": 35,
+      "image_url": "https://via.placeholder.com/150?text=Greek+Salad"
+    },
+    {
+      "id": 6,
+      "category_id": 4,
+      "name": "Chocolate Cake",
+      "description": "עוגת שוקולד עשירה",
+      "price": 40,
+      "image_url": "https://via.placeholder.com/150?text=Chocolate+Cake"
+    },
+    {
+      "id": 7,
+      "category_id": 4,
+      "name": "Cheesecake",
+      "description": "עוגת גבינה עם רוטב תות",
+      "price": 45,
+      "image_url": "https://via.placeholder.com/150?text=Cheesecake"
+    },
+    {
+      "id": 8,
+      "category_id": 5,
+      "name": "Lemonade",
+      "description": "לימונדה טבעית מרעננת",
+      "price": 15,
+      "image_url": "https://via.placeholder.com/150?text=Lemonade"
+    },
+    {
+      "id": 9,
+      "category_id": 5,
+      "name": "Iced Tea",
+      "description": "תה קר עם לימון ונענע",
+      "price": 15,
+      "image_url": "https://via.placeholder.com/150?text=Iced+Tea"
+    }
+  ]
+  

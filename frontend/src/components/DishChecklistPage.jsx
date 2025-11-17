@@ -1,83 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Card, CardContent, Checkbox, FormControlLabel, Button } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-
-// Mock data for checklist (replace with real data as needed)
-const mockDishesByCategory = {
-  1: [
-    { id: 101, name: 'סלט ירקות' },
-    { id: 102, name: 'מרק עדשים' },
-    { id: 103, name: 'לחמניות' },
-  ],
-  2: [
-    { id: 201, name: 'עוף בתנור' },
-    { id: 202, name: 'קציצות דגים' },
-    { id: 203, name: 'אורז לבן' },
-  ],
-  3: [
-    { id: 301, name: 'פירה תפוחי אדמה' },
-    { id: 302, name: 'שעועית ירוקה' },
-    { id: 303, name: 'סלט קולסלאו' },
-  ],
-  4: [
-    { id: 401, name: 'פסטה אלפרדו' },
-    { id: 402, name: 'פסטה פומודורו' },
-    { id: 403, name: 'פסטה פסטו' },
-  ],
-};
+import { cateringsService } from '../services/cateringsService';
+import { dishesService } from '../services/dishesService';
 
 export default function DishChecklistPage() {
   const { cateringId, dishId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const { items: cartItems, addItem, removeItem } = useCart();
-  const dishes = mockDishesByCategory[dishId] || [];
-  const cateringName = location.state?.cateringName || `Catering ${cateringId}`;
-  const categoryNameFromState = location.state?.categoryName || `Category ${dishId}`;
+  
+  const [dishes, setDishes] = useState([]);
+  const [cateringName, setCateringName] = useState('');
+  const [categoryName, setCategoryName] = useState('');
+  const [checked, setChecked] = useState([]);
+  const MAX_SELECTION = 2;
 
-  const MAX_SELECTION = 2; // Change this value to set the max allowed selections
+  useEffect(() => {
+    // שליפת פרטי הקייטרינג
+    cateringsService.getAll().then((all) => {
+      const catering = all.find(c => String(c.id) === String(cateringId));
+      if (catering) setCateringName(catering.name);
+    });
 
-  // initialize checked from cart items that belong to this category and catering
-  const initialChecked = cartItems
-    .filter((it) => String(it.categoryId) === String(dishId) && String(it.cateringId) === String(cateringId))
-    .map((it) => it.id);
+    // שליפת מנות מה־JSON לפי cateringId
+    dishesService.getByCateringId(cateringId).then((allDishes) => {
+      setDishes(allDishes);
+      // אם רוצים שם קטגוריה ספציפי (dishId) אפשר למצוא אותו
+      const category = allDishes.find(d => String(d.id) === String(dishId));
+      if (category) setCategoryName(category.name);
 
-  const [checked, setChecked] = useState(initialChecked);
+      // אתחול checked לפי פריטים שכבר בקארט
+      const initialChecked = cartItems
+        .filter(it => String(it.categoryId) === String(dishId) && String(it.cateringId) === String(cateringId))
+        .map(it => it.id);
+      setChecked(initialChecked);
+    });
+  }, [cateringId, dishId, cartItems]);
 
-  const handleToggle = (id) => {
+  const handleToggle = (id, dishName) => {
     if (checked.includes(id)) {
-      setChecked((prev) => prev.filter((item) => item !== id));
+      setChecked(prev => prev.filter(item => item !== id));
       removeItem(id, cateringId);
     } else if (checked.length < MAX_SELECTION) {
-      setChecked((prev) => [...prev, id]);
-      const dishObj = dishes.find((d) => d.id === id) || { id, name: 'Item' };
-      // add more metadata: categoryName and catering info
+      setChecked(prev => [...prev, id]);
       addItem({
-        id: dishObj.id,
-        name: dishObj.name,
+        id,
+        name: dishName,
         categoryId: dishId,
-        categoryName: categoryNameFromState,
-        cateringId: cateringId,
+        categoryName,
+        cateringId,
         cateringName,
       });
     }
-    // If max reached, do nothing
   };
+
+  if (dishes.length === 0) return <Typography sx={{ p: 3 }}>Loading dishes...</Typography>;
 
   return (
     <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', pb: 8 }}>
       {/* HEADER */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          p: 2,
-          bgcolor: 'white',
-          borderBottom: '1px solid #eee',
-        }}
-      >
+      <Box sx={{ display: 'flex', alignItems: 'center', p: 2, bgcolor: 'white', borderBottom: '1px solid #eee' }}>
         <Button onClick={() => navigate(-1)} size="small" sx={{ minWidth: 0, p: 1 }}>
           <ArrowBackIosNewIcon fontSize="small" />
         </Button>
@@ -86,28 +70,19 @@ export default function DishChecklistPage() {
         </Typography>
       </Box>
 
-      {/* Checklist */}
       <Box sx={{ px: 2, mt: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          רשימת מנות
-        </Typography>
-        <Typography color="text.secondary" sx={{ mb: 1 }}>
-          ניתן לבחור עד {MAX_SELECTION} מנות בלבד.
-        </Typography>
-        {dishes.length === 0 ? (
-          <Typography color="text.secondary">לא נמצאו מנות לקטגוריה זו.</Typography>
-        ) : (
-          dishes.map((dish) => (
-            <Card
-              key={dish.id}
-              sx={{ borderRadius: 3, mb: 2, position: 'relative', overflow: 'hidden' }}
-            >
+        <Typography variant="h6" sx={{ mb: 2 }}>רשימת מנות</Typography>
+        <Typography color="text.secondary" sx={{ mb: 1 }}>ניתן לבחור עד {MAX_SELECTION} מנות בלבד.</Typography>
+        {dishes
+          .filter(d => String(d.id) === String(dishId)) // רק המנה שנבחרה
+          .map(dish => (
+            <Card key={dish.id} sx={{ borderRadius: 3, mb: 2, position: 'relative', overflow: 'hidden' }}>
               <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
                 <FormControlLabel
                   control={
                     <Checkbox
                       checked={checked.includes(dish.id)}
-                      onChange={() => handleToggle(dish.id)}
+                      onChange={() => handleToggle(dish.id, dish.name)}
                       color="primary"
                       disabled={!checked.includes(dish.id) && checked.length >= MAX_SELECTION}
                     />
@@ -116,8 +91,7 @@ export default function DishChecklistPage() {
                 />
               </CardContent>
             </Card>
-          ))
-        )}
+          ))}
       </Box>
     </Box>
   );

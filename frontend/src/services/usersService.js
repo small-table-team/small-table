@@ -1,37 +1,65 @@
 import usersData from "../Data/users.json";
 
 export const usersService = {
+
+  // טעינת כל המשתמשים מתוך localStorage או מה־JSON אם זו הפעלה ראשונה
   getAll: () => {
-    console.log("All users:", usersData); // מציג כל המשתמשים
-    return usersData;
+    const stored = JSON.parse(localStorage.getItem("users"));
+    return stored || usersData;
+  },
+
+  // שמירה חזרה ל-localStorage
+  saveAll: (users) => {
+    localStorage.setItem("users", JSON.stringify(users));
   },
 
   login: (email, password) => {
-    const user = usersData.find(
+    const users = usersService.getAll();
+
+    const user = users.find(
       (u) => u.email === email && u.password === password
     );
-    console.log(`Login attempt for ${email}:`, usersData); // מציג את כל המשתמשים בכל ניסיון התחברות
+
+    if (user) {
+      localStorage.setItem("loggedUser", JSON.stringify(user));
+    }
+
     return user || null;
   },
 
-  register: (name, email, password) => {
-    const exists = usersData.find((u) => u.email === email);
+  register: (name, email, password, role) => {
+    const users = usersService.getAll();
+
+    const exists = users.find((u) => u.email === email);
     if (exists) {
-      console.log(`Register attempt failed for ${email}: Email exists`);
-      console.log("Current users:", usersData); // מציג את כל המשתמשים
       return { error: "Email already exists" };
     }
 
     const newUser = {
-      id: usersData.length + 1,
+      id: users.length + 1,
       name,
       email,
       password,
+      role,
+      status: "active"   // אם תרצי לשנות תגידי
     };
 
-    usersData.push(newUser);
-    console.log(`New user added: ${email}`);
-    console.log("Current users:", usersData); // מציג את כל המשתמשים לאחר ההוספה
+    users.push(newUser);
+
+    // שמירת המשתמשים המעודכנים
+    usersService.saveAll(users);
+
+    // שמירת המשתמש שנרשם כ־logged in
+    localStorage.setItem("loggedUser", JSON.stringify(newUser));
+
     return newUser;
+  },
+
+  getLoggedUser: () => {
+    return JSON.parse(localStorage.getItem("loggedUser"));
+  },
+
+  logout: () => {
+    localStorage.removeItem("loggedUser");
   },
 };
