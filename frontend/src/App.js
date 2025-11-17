@@ -1,43 +1,52 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
 
-const SplashPageLazy = React.lazy(() => import("./components/SplashPage"));
-const HomePageLazy = React.lazy(() => import("./components/HomePage"));
-const CateringHomePageLazy = React.lazy(() => import("./components/CateringHomePage"));
-const LoginLazy = React.lazy(() => import("./components/LoginPage"));
-const OnboardingLazy = React.lazy(() => import("./components/Onboarding"));
-const SignUpLazy = React.lazy(() => import("./components/SignUpPage"));
-const AllCateringsPageLazy = React.lazy(() => import("./components/AllCateringsPage"));
+// Lazy-loaded components
+const SplashPage = React.lazy(() => import("./components/SplashPage"));
+const HomePage = React.lazy(() => import("./components/HomePage"));
+const CateringDashboard = React.lazy(() => import("./components/CateringDashboardPage"));
+const LoginPage = React.lazy(() => import("./components/LoginPage"));
+const Onboarding = React.lazy(() => import("./components/Onboarding"));
+const SignUpPage = React.lazy(() => import("./components/SignUpPage"));
+const AllCateringsPage = React.lazy(() => import("./components/AllCateringsPage"));
 const CateringDishesPage = React.lazy(() => import("./components/CateringDishesPage"));
 const FirstFilterPage = React.lazy(() => import("./components/FirstFilterPage"));
 const DishChecklistPage = React.lazy(() => import("./components/DishChecklistPage"));
 const CartDrawer = React.lazy(() => import("./components/CartDrawer"));
-const { CartProvider } = require('./context/CartContext');
+const NotFoundPage = React.lazy(() => import("./components/NotFoundPage")); // אופציונלי - דף 404
+
 function App() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <CartProvider>
+    <CartProvider>
+      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-        <Route path="/" element={<SplashPageLazy />} />
-        <Route path="/HomePage" element={<HomePageLazy />} />
-        <Route path="/catering-home" element={<CateringHomePageLazy />} /> {/* דף הבית של בעל הקייטרינג */}
-        <Route path="/login" element={<LoginLazy />} />
-        <Route path="/Onboarding" element={<OnboardingLazy />} />
-        <Route path="/signup" element={<SignUpLazy  />} /> 
-  <Route path="/AllCaterings" element={<AllCateringsPageLazy />} />
-  <Route path="/catering/:cateringId" element={<CateringDishesPage />} />
-  <Route path="/dish-checklist/:cateringId/:dishId" element={<DishChecklistPage />} />
-  <Route path="/FirstFilterPage" element={<FirstFilterPage />} />
-       
+          {/* Public Pages */}
+          <Route path="/" element={<SplashPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/all-caterings" element={<AllCateringsPage />} />
+          <Route path="/first-filter" element={<FirstFilterPage />} />
 
-      
+          {/* Customer: View Catering Menus */}
+          <Route path="/catering/:cateringId" element={<CateringDishesPage />} />
+          <Route path="/dish-checklist/:cateringId/:dishId" element={<DishChecklistPage />} />
+
+          {/* Catering Owner: Dashboard */}
+          <Route path="/catering-dashboard" element={<CateringDashboard />} />
+
+          {/* Fallback 404 */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
-        {/* cart drawer is lazy-loaded as well */}
-        <React.Suspense fallback={null}>
+
+        {/* Cart drawer */}
+        <Suspense fallback={null}>
           <CartDrawer />
-        </React.Suspense>
-      </CartProvider>
-    </Suspense>
+        </Suspense>
+      </Suspense>
+    </CartProvider>
   );
 }
 

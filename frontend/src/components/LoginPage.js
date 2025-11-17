@@ -45,8 +45,8 @@ export default function Login() {
 
         // ❗ הפניה לפי role/סטטוס
         const role = user.role || "user"; // ברירת מחדל למשתמש
-        if (role === "user") navigate("/AllCaterings");
-        else if (role === "catering") navigate("/catering-home");
+        if (role === "user")navigate("/all-caterings");
+        else if (role === "catering") navigate("/catering-dashboard");
         else if (role === "admin") navigate("/HomePage"); // או דף מנהל מתאים
         else navigate("/AllCaterings"); // fallback
       } else {

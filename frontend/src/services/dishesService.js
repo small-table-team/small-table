@@ -4,6 +4,24 @@ import categoriesData from "../Data/MenuCategory.json"; // הקובץ של קט�
 
 export const dishesService = {
   // מחזיר את כל המנות
+  addDish: (dish) => {
+    const newDish = { ...dish, id: dishesData.length + 1 };
+    dishesData.push(newDish);
+    return new Promise(resolve => setTimeout(() => resolve(newDish), 300));
+  },
+  
+  updateDish: (id, updatedDish) => {
+    const index = dishesData.findIndex(d => d.id === id);
+    if (index !== -1) dishesData[index] = updatedDish;
+    return new Promise(resolve => setTimeout(() => resolve(updatedDish), 300));
+  },
+  
+  deleteDish: (id) => {
+    const index = dishesData.findIndex(d => d.id === id);
+    if (index !== -1) dishesData.splice(index, 1);
+    return new Promise(resolve => setTimeout(() => resolve(true), 300));
+  }
+,  
   getAll: () => {
     console.log("dishesService.js: getAll() מקור הנתונים: src/Data/Dish.json", dishesData);
     return new Promise((resolve) => {
@@ -41,4 +59,5 @@ export const dishesService = {
       setTimeout(() => resolve(filtered), 300);
     });
   }
+  
 };
