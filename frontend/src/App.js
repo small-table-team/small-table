@@ -14,7 +14,8 @@ const CateringDishesPage = React.lazy(() => import("./components/CateringDishesP
 const FirstFilterPage = React.lazy(() => import("./components/FirstFilterPage"));
 const DishChecklistPage = React.lazy(() => import("./components/DishChecklistPage"));
 const CartDrawer = React.lazy(() => import("./components/CartDrawer"));
-const NotFoundPage = React.lazy(() => import("./components/NotFoundPage")); // אופציונלי - דף 404
+const NotFoundPage = React.lazy(() => import("./components/NotFoundPage"));
+const CheckoutPage = React.lazy(() => import("./components/CheckoutPage")); // דף הצ'ק-אאוט
 
 function App() {
   return (
@@ -36,6 +37,9 @@ function App() {
 
           {/* Catering Owner: Dashboard */}
           <Route path="/catering-dashboard" element={<CateringDashboard />} />
+
+          {/* Checkout Page */}
+          <Route path="/checkout" element={<CheckoutPage />} />  {/* הוספת הנתיב לצ'ק-אאוט */}
 
           {/* Fallback 404 */}
           <Route path="*" element={<NotFoundPage />} />

@@ -13,10 +13,12 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useCart } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom';  // הוספתי את ה- useNavigate
 
 export default function CartDrawer() {
   const [open, setOpen] = useState(false);
-    const { items, removeItem, removeCatering, clearCart } = useCart();
+  const { items, removeItem, removeCatering, clearCart } = useCart();
+  const navigate = useNavigate(); // יצירת הפונקציה לנווט
 
   // group items by cateringId
   const grouped = items.reduce((acc, it) => {
@@ -25,6 +27,15 @@ export default function CartDrawer() {
     acc[key].items.push(it);
     return acc;
   }, {});
+
+  // Calculate the total price
+  const totalPrice = items.reduce((acc, item) => acc + (item.price || 0), 0);
+
+  // פונקציה למעבר לדף הבא בהזמנה
+  const handleProceedToOrder = () => {
+    // כאן תוכל לנווט לדף הבא, לדוגמה דף תשלום או דף פרטי הזמנה
+    navigate('/checkout'); // תוודא שיצרת את הנתיב הזה ב-react-router
+  };
 
   return (
     <>
@@ -76,7 +87,12 @@ export default function CartDrawer() {
                     >
                       <ListItemText
                         primary={item.name}
-                        secondary={item.categoryName ? `קטגוריה: ${item.categoryName}` : ''}
+                        secondary={
+                          <>
+                            {item.categoryName && `קטגוריה: ${item.categoryName}`}
+                            <Typography variant="body2" color="text.secondary">מחיר: ₪{item.price}</Typography>
+                          </>
+                        }
                       />
                     </ListItem>
                   ))}
@@ -86,13 +102,16 @@ export default function CartDrawer() {
             ))
           )}
 
-          <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-            <Button variant="contained" color="primary" disabled={items.length === 0}>
-              המשך להזמנה
-            </Button>
-            <Button variant="outlined" onClick={clearCart} disabled={items.length === 0}>
-              נקה עגלה
-            </Button>
+          <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>מחיר סופי: ₪{totalPrice.toFixed(2)}</Typography>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button variant="contained" color="primary" onClick={handleProceedToOrder} disabled={items.length === 0}>
+                המשך להזמנה
+              </Button>
+              <Button variant="outlined" onClick={clearCart} disabled={items.length === 0}>
+                נקה עגלה
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Drawer>

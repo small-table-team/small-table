@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
   Box, Typography, Grid, Card, CardContent, CardMedia,
-  Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle
+  Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText
 } from "@mui/material";
 import { dishesService } from "../services/dishesService";
 import { usersService } from "../services/usersService";
 
 export default function CateringDashboardPage() {
-  const [loggedUser, setLgedUser] = useState(() => usersService.getLoggedUser());
+  const [loggedUser, setLoggedUser] = useState(() => usersService.getLoggedUser());
   const [dishes, setDishes] = useState([]);
   const [editingDish, setEditingDish] = useState(null);
   const [newDish, setNewDish] = useState({ name: "", description: "", price: "", image_url: "" });
   const [openDialog, setOpenDialog] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (loggedUser?.role === "catering") {
@@ -30,7 +31,19 @@ export default function CateringDashboardPage() {
     setOpenDialog(true);
   };
 
+  const validateForm = () => {
+    let formErrors = {};
+    if (!newDish.name) formErrors.name = "שם המנה הוא שדה חובה";
+    if (!newDish.description) formErrors.description = "תיאור המנה הוא שדה חובה";
+    if (!newDish.price || newDish.price <= 0) formErrors.price = "מחיר המנה הוא שדה חובה";
+    if (!newDish.image_url) formErrors.image_url = "יש להעלות תמונה של המנה";
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
   const handleSave = () => {
+    if (!validateForm()) return;
+
     if (editingDish) {
       dishesService.updateDish(editingDish.id, newDish);
       setDishes(prev => prev.map(d => d.id === editingDish.id ? newDish : d));
@@ -41,6 +54,7 @@ export default function CateringDashboardPage() {
     setOpenDialog(false);
     setEditingDish(null);
     setNewDish({ name: "", description: "", price: "", image_url: "" });
+    setErrors({});
   };
 
   return (
@@ -78,6 +92,8 @@ export default function CateringDashboardPage() {
             value={newDish.name}
             onChange={(e) => setNewDish(prev => ({ ...prev, name: e.target.value }))}
             margin="dense"
+            error={Boolean(errors.name)}
+            helperText={errors.name}
           />
           <TextField
             fullWidth
@@ -85,6 +101,8 @@ export default function CateringDashboardPage() {
             value={newDish.description}
             onChange={(e) => setNewDish(prev => ({ ...prev, description: e.target.value }))}
             margin="dense"
+            error={Boolean(errors.description)}
+            helperText={errors.description}
           />
           <TextField
             fullWidth
@@ -93,6 +111,8 @@ export default function CateringDashboardPage() {
             value={newDish.price}
             onChange={(e) => setNewDish(prev => ({ ...prev, price: e.target.value }))}
             margin="dense"
+            error={Boolean(errors.price)}
+            helperText={errors.price}
           />
 
           {/* Image Upload */}
@@ -103,6 +123,8 @@ export default function CateringDashboardPage() {
             margin="dense"
             InputProps={{ readOnly: true }}
             onClick={() => document.getElementById("dish-image-input").click()}
+            error={Boolean(errors.image_url)}
+            helperText={errors.image_url}
           />
           <input
             type="file"
